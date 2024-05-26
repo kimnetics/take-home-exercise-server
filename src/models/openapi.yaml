@@ -67,6 +67,14 @@ paths:
             type: string
             pattern: '^([Ff][Ii][Rr][Ss][Tt][Nn][Aa][Mm][Ee]|[Ll][Aa][Ss][Tt][Nn][Aa][Mm][Ee]|[Cc][Oo][Mm][Pp][Aa][Nn][Yy][Nn][Aa][Mm][Ee])\|([Aa][Ss][Cc]|[Dd][Ee][Ss][Cc])$'
           example: "firstName|asc"
+        - name: limit
+          in: query
+          description: Limit number of returned records.
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+          example: 10
       responses:
         "200":
           description: Request succeeded

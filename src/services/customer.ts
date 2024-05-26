@@ -4,9 +4,9 @@ import { type Customer } from '../models/customer'
 import { type ResponseInfo } from '../models/response-info'
 import * as util from '../utils/util.js'
 
-export const customerGet = async (db: Database.Database, filter: string | undefined, sort: string | undefined): Promise<ResponseInfo> => {
+export const customerGet = async (db: Database.Database, filter: string | undefined, sort: string | undefined, limit: string | undefined): Promise<ResponseInfo> => {
   let whereClause = ''
-  if (filter !== undefined && (filter !== '')) {
+  if (filter !== undefined && filter !== '') {
     const separator = filter.indexOf('|')
     const field = filter.substring(0, separator)
     const value = filter.substring(separator + 1)
@@ -30,6 +30,11 @@ export const customerGet = async (db: Database.Database, filter: string | undefi
     }
   }
 
-  const responseBody = db.prepare(`SELECT * FROM customer ${whereClause} ORDER BY ${orderByFields}`).all() as Customer[]
+  let limitClause = ''
+  if (limit !== undefined && limit !== '') {
+    limitClause = `LIMIT ${parseInt(limit)}`
+  }
+
+  const responseBody = db.prepare(`SELECT * FROM customer ${whereClause} ORDER BY ${orderByFields} ${limitClause}`).all() as Customer[]
   return util.formatResponse(200, responseBody)
 }

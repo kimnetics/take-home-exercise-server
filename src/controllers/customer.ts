@@ -7,7 +7,8 @@ export const customerGetHandler = async (req: Request, res: Response, next: Next
   try {
     const filter = req.query.filter as string
     const sort = req.query.sort as string
-    const response = await customerGet(req.app.get('db'), filter, sort)
+    const limit = req.query.limit as string
+    const response = await customerGet(req.app.get('db'), filter, sort, limit)
     util.returnResponse(res, response.statusCode, response.body)
   } catch (err) {
     next(err)

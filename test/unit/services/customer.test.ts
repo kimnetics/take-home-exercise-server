@@ -22,12 +22,12 @@ describe('services/customer', () => {
 
   describe('customerGet', () => {
     it('should return a 200 status code on successful data retrieval', async () => {
-      const response = await customerGet(db, '', '')
+      const response = await customerGet(db, '', '', '')
       expect(response.statusCode).to.equal(200)
     })
 
     it('with no filter should return a complete list of customers', async () => {
-      const response = await customerGet(db, '', '')
+      const response = await customerGet(db, '', '', '')
       expect(response.body.length).to.equal(5)
       expect(response.body[0].firstName).to.equal('Alan')
       expect(response.body[0].lastName).to.equal('Chapman')
@@ -47,7 +47,7 @@ describe('services/customer', () => {
     })
 
     it('with a companyName filter should return a list of customers with that company name', async () => {
-      const response = await customerGet(db, 'companyName|Buffalo Corporation', '')
+      const response = await customerGet(db, 'companyName|Buffalo Corporation', '', '')
       expect(response.body.length).to.equal(2)
       expect(response.body[0].firstName).to.equal('Charles')
       expect(response.body[0].lastName).to.equal('Atkins')
@@ -58,7 +58,7 @@ describe('services/customer', () => {
     })
 
     it('with a lowercase companyname filter should return a list of customers with that company name', async () => {
-      const response = await customerGet(db, 'companyname|Buffalo Corporation', '')
+      const response = await customerGet(db, 'companyname|Buffalo Corporation', '', '')
       expect(response.body.length).to.equal(2)
       expect(response.body[0].firstName).to.equal('Charles')
       expect(response.body[0].lastName).to.equal('Atkins')
@@ -69,7 +69,7 @@ describe('services/customer', () => {
     })
 
     it('with an uppercase COMPANYNAME filter should return a list of customers with that company name', async () => {
-      const response = await customerGet(db, 'COMPANYNAME|Buffalo Corporation', '')
+      const response = await customerGet(db, 'COMPANYNAME|Buffalo Corporation', '', '')
       expect(response.body.length).to.equal(2)
       expect(response.body[0].firstName).to.equal('Charles')
       expect(response.body[0].lastName).to.equal('Atkins')
@@ -80,7 +80,7 @@ describe('services/customer', () => {
     })
 
     it('with no sort should return a list of customers sorted by firstName asc, lastName asc', async () => {
-      const response = await customerGet(db, '', '')
+      const response = await customerGet(db, '', '', '')
       expect(response.body[0].firstName).to.equal('Alan')
       expect(response.body[0].lastName).to.equal('Chapman')
       expect(response.body[0].companyName).to.equal('Cat Incorporated')
@@ -99,7 +99,7 @@ describe('services/customer', () => {
     })
 
     it('with firstName asc sort should return a list of customers sorted by firstName asc, lastName asc', async () => {
-      const response = await customerGet(db, '', 'firstName|asc')
+      const response = await customerGet(db, '', 'firstName|asc', '')
       expect(response.body[0].firstName).to.equal('Alan')
       expect(response.body[0].lastName).to.equal('Chapman')
       expect(response.body[0].companyName).to.equal('Cat Incorporated')
@@ -118,7 +118,7 @@ describe('services/customer', () => {
     })
 
     it('with firstName desc sort should return a list of customers sorted by firstName desc, lastName desc', async () => {
-      const response = await customerGet(db, '', 'firstName|desc')
+      const response = await customerGet(db, '', 'firstName|desc', '')
       expect(response.body[0].firstName).to.equal('Dennis')
       expect(response.body[0].lastName).to.equal('Atkins')
       expect(response.body[0].companyName).to.equal('Buffalo Corporation')
@@ -137,7 +137,7 @@ describe('services/customer', () => {
     })
 
     it('with lastName asc sort should return a list of customers sorted by lastName asc, firstName asc', async () => {
-      const response = await customerGet(db, '', 'lastName|asc')
+      const response = await customerGet(db, '', 'lastName|asc', '')
       expect(response.body[0].firstName).to.equal('Charles')
       expect(response.body[0].lastName).to.equal('Atkins')
       expect(response.body[0].companyName).to.equal('Buffalo Corporation')
@@ -156,7 +156,7 @@ describe('services/customer', () => {
     })
 
     it('with lastName desc sort should return a list of customers sorted by lastName desc, firstName desc', async () => {
-      const response = await customerGet(db, '', 'lastName|desc')
+      const response = await customerGet(db, '', 'lastName|desc', '')
       expect(response.body[0].firstName).to.equal('Alan')
       expect(response.body[0].lastName).to.equal('Dunham')
       expect(response.body[0].companyName).to.equal('Aardvark Limited')
@@ -175,7 +175,7 @@ describe('services/customer', () => {
     })
 
     it('with companyName asc sort should return a list of customers sorted by companyName asc firstName asc, lastName asc', async () => {
-      const response = await customerGet(db, '', 'companyName|asc')
+      const response = await customerGet(db, '', 'companyName|asc', '')
       expect(response.body[0].firstName).to.equal('Alan')
       expect(response.body[0].lastName).to.equal('Dunham')
       expect(response.body[0].companyName).to.equal('Aardvark Limited')
@@ -194,7 +194,7 @@ describe('services/customer', () => {
     })
 
     it('with companyName desc sort should return a list of customers sorted by companyName desc firstName desc, lastName desc', async () => {
-      const response = await customerGet(db, '', 'companyName|desc')
+      const response = await customerGet(db, '', 'companyName|desc', '')
       expect(response.body[0].firstName).to.equal('Bob')
       expect(response.body[0].lastName).to.equal('Benson')
       expect(response.body[0].companyName).to.equal('Duck Partnership')
@@ -213,7 +213,7 @@ describe('services/customer', () => {
     })
 
     it('with all lowercase companyname desc sort should return a list of customers sorted by companyName desc firstName desc, lastName desc', async () => {
-      const response = await customerGet(db, '', 'companyname|desc')
+      const response = await customerGet(db, '', 'companyname|desc', '')
       expect(response.body[0].firstName).to.equal('Bob')
       expect(response.body[0].lastName).to.equal('Benson')
       expect(response.body[0].companyName).to.equal('Duck Partnership')
@@ -232,7 +232,7 @@ describe('services/customer', () => {
     })
 
     it('with all uppercase COMPANYNAME DESC sort should return a list of customers sorted by companyName desc firstName desc, lastName desc', async () => {
-      const response = await customerGet(db, '', 'COMPANYNAME|DESC')
+      const response = await customerGet(db, '', 'COMPANYNAME|DESC', '')
       expect(response.body[0].firstName).to.equal('Bob')
       expect(response.body[0].lastName).to.equal('Benson')
       expect(response.body[0].companyName).to.equal('Duck Partnership')
@@ -248,6 +248,45 @@ describe('services/customer', () => {
       expect(response.body[4].firstName).to.equal('Alan')
       expect(response.body[4].lastName).to.equal('Dunham')
       expect(response.body[4].companyName).to.equal('Aardvark Limited')
+    })
+
+    it('with no limit should return a complete list of customers', async () => {
+      const response = await customerGet(db, '', '', '')
+      expect(response.body.length).to.equal(5)
+      expect(response.body[0].firstName).to.equal('Alan')
+      expect(response.body[0].lastName).to.equal('Chapman')
+      expect(response.body[0].companyName).to.equal('Cat Incorporated')
+      expect(response.body[1].firstName).to.equal('Alan')
+      expect(response.body[1].lastName).to.equal('Dunham')
+      expect(response.body[1].companyName).to.equal('Aardvark Limited')
+      expect(response.body[2].firstName).to.equal('Bob')
+      expect(response.body[2].lastName).to.equal('Benson')
+      expect(response.body[2].companyName).to.equal('Duck Partnership')
+      expect(response.body[3].firstName).to.equal('Charles')
+      expect(response.body[3].lastName).to.equal('Atkins')
+      expect(response.body[3].companyName).to.equal('Buffalo Corporation')
+      expect(response.body[4].firstName).to.equal('Dennis')
+      expect(response.body[4].lastName).to.equal('Atkins')
+      expect(response.body[4].companyName).to.equal('Buffalo Corporation')
+    })
+
+    it('with a limit of 1 should return one customer', async () => {
+      const response = await customerGet(db, '', '', '1')
+      expect(response.body.length).to.equal(1)
+      expect(response.body[0].firstName).to.equal('Alan')
+      expect(response.body[0].lastName).to.equal('Chapman')
+      expect(response.body[0].companyName).to.equal('Cat Incorporated')
+    })
+
+    it('with a limit of 2 should return two customers', async () => {
+      const response = await customerGet(db, '', '', '2')
+      expect(response.body.length).to.equal(2)
+      expect(response.body[0].firstName).to.equal('Alan')
+      expect(response.body[0].lastName).to.equal('Chapman')
+      expect(response.body[0].companyName).to.equal('Cat Incorporated')
+      expect(response.body[1].firstName).to.equal('Alan')
+      expect(response.body[1].lastName).to.equal('Dunham')
+      expect(response.body[1].companyName).to.equal('Aardvark Limited')
     })
   })
 })
