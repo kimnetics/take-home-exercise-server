@@ -1,0 +1,183 @@
+openapi: 3.0.3
+info:
+  title: Take Home Exercise API
+  description: An API for the Take Home Exercise.
+  version: 1.0.0
+externalDocs:
+  description: GitHub Repo
+  url: https://github.com/kimnetics/take-home-exercise-server
+servers:
+  - url: http://localhost:4000/v1
+tags:
+  - name: Company
+    description: >
+      Our customer's companies.
+  - name: Customer
+    description: >
+      Our customers.
+  - name: Health Check
+    description: >
+      Check on API health.
+paths:
+  /companies:
+    get:
+      tags:
+        - Company
+      summary: Get companies.
+      operationId: getCompanies
+      responses:
+        "200":
+          description: Request succeeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompaniesGETResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorResponse"
+  /customers:
+    get:
+      tags:
+        - Customer
+      summary: Get customers.
+      operationId: getCustomers
+      parameters:
+        - name: filter
+          in: query
+          description: Filter clause.
+          required: false
+          schema:
+            type: string
+            pattern: '^[Cc][Oo][Mm][Pp][Aa][Nn][Yy][Nn][Aa][Mm][Ee]\|.+$'
+          example: "companyName|Acme"
+        - name: sort
+          in: query
+          description: Sort order clause.
+          required: false
+          schema:
+            type: string
+            pattern: '^([Ff][Ii][Rr][Ss][Tt][Nn][Aa][Mm][Ee]|[Ll][Aa][Ss][Tt][Nn][Aa][Mm][Ee]|[Cc][Oo][Mm][Pp][Aa][Nn][Yy][Nn][Aa][Mm][Ee])\|([Aa][Ss][Cc]|[Dd][Ee][Ss][Cc])$'
+          example: "firstName|asc"
+      responses:
+        "200":
+          description: Request succeeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomersGETResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorResponse"
+  /health-check:
+    get:
+      tags:
+        - Health Check
+      summary: Get summary of API health.
+      operationId: getAPIHealthSummary
+      responses:
+        "200":
+          description: Request succeeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthCheckGETResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorResponse"
+components:
+  schemas:
+    CompaniesGETResponse:
+      type: array
+      items:
+        type: object
+      example:
+        - companyName: Abbott, Champlin and Gutmann
+        - companyName: Balistreri LLC
+        - companyName: Corkery, Feil and Bosco
+      additionalProperties: false
+    CustomersGETResponse:
+      type: array
+      items:
+        type: object
+      example:
+        - firstName: Adolph
+          lastName: Bins
+          companyName: Keeling - Connelly
+        - firstName: Aisha
+          lastName: Balistreri
+          companyName: Donnelly, Satterfield and Schmidt
+        - firstName: Alex
+          lastName: Tillman
+          companyName: Dibbert - Howell
+      additionalProperties: false
+    HealthCheckGETResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: Healthy.
+    ValidationErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Unknown query parameter 'badparameter'
+        errors:
+          type: array
+          items:
+            type: object
+          example:
+            - path: /query/badparameter
+              message: Unknown query parameter 'badparameter'
+    BadRequestErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Invalid parameter.
+        errors:
+          type: array
+          items:
+            type: object
+          example:
+            - name: BadRequestError
+              status: 400
+    ServerErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "no such table: BadTable"
+        errors:
+          type: array
+          items:
+            type: object
+          example:
+            - code: "SQLITE_ERROR"
