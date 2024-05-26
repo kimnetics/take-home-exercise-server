@@ -13,7 +13,7 @@ exports.config = {
   /**
    * Your New Relic license key.
    */
-  license_key: '7cf2b0c2cede7c944b07e185e239a45cFFFFNRAL',
+  license_key: '',
   logging: {
     /**
      * Write logs to stdout.
