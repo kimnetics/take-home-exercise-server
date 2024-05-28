@@ -1,11 +1,14 @@
 import { faker } from '@faker-js/faker'
-import type Database from 'better-sqlite3'
+import Database from 'better-sqlite3'
 
 import { type Company } from '../models/company'
 
 faker.seed(1)
 
-export const createTables = (db: Database.Database): void => {
+export const createDatabase = (): Database.Database => {
+  const db = new Database(':memory:', {})
+  db.pragma('journal_mode = WAL')
+
   db.exec('CREATE TABLE company (\'companyName\' VARCHAR)')
 
   {
@@ -26,8 +29,19 @@ export const createTables = (db: Database.Database): void => {
   {
     const statement = db.prepare('INSERT INTO customer (firstName, lastName, companyName) VALUES (?, ?, ?)')
     for (let i = 0; i < 100; i++) {
-      const randomInt = Math.floor(Math.random() * 20)
-      statement.run(faker.person.firstName(), faker.person.lastName(), companyNames[randomInt])
+      const firstName = faker.person.firstName()
+      const lastName = faker.person.lastName()
+      statement.run(firstName, lastName, companyNames[stringToNumber(firstName + '~~' + lastName)])
     }
   }
+
+  return db
+}
+
+const stringToNumber = (str: string): number => {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash + str.charCodeAt(i)) % 20
+  }
+  return hash
 }

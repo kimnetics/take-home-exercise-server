@@ -1,11 +1,9 @@
 import { fileURLToPath } from 'url'
 import path from 'path'
-
-import Database from 'better-sqlite3'
 import express, { type ErrorRequestHandler, type Request, type Response } from 'express'
 import * as OpenApiValidator from 'express-openapi-validator'
 
-import { createTables } from './database/create-tables.js'
+import { createDatabase } from './database/create-database.js'
 import logger from './middleware/logger.js'
 import v1Router from './routes/v1.js'
 import * as util from './utils/util.js'
@@ -48,9 +46,7 @@ app.use((req, res, next) => {
 })
 
 // Prepare database.
-const db = new Database(':memory:', {})
-db.pragma('journal_mode = WAL')
-createTables(db)
+const db = createDatabase()
 app.set('db', db)
 
 // Add CORS headers.
